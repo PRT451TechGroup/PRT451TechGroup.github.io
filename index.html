@@ -11,81 +11,87 @@
 	<script src="jquery/jquery.mobile-1.4.5.min.js"></script>
 	
 </head>
-
 <body id="page_body">
-	<section data-role="page" id="pgLogin">
-		<div data-role="header">
-			<h1>CDU Tech Support</h1>
-		</div>
-		<div data-role="content">
-			<form>
-				<label for="username">Username</label>
-				<input type="text" name="username" id="username" />
-				<label for="password">Password</label>
-				<input type="password" name="password" id="password" />
-			</form>
-			<a class="ui-btn ui-corner-all ui-btn-icon-left ui-icon-action" id="btn" href="#pgMain" data-transition="slide">Login</a>
-		</div>
-	</section>
-	<section data-role="page" id="pgMain">
-		<div data-role="header">
-			<h1>CDU Tech Support</h1>
-		</div>
+	<section data-role="page" id="pgLogin"><div data-role="header">
+	<h1>Sign In</h1>
+</div>
+<div data-role="content">
+	<form>
+		<label for="username">Username</label>
+		<input type="text" name="username" id="username" />
+		<label for="password">Password</label>
+		<input type="password" name="password" id="password" />
+	</form>
+	<a class="ui-btn ui-corner-all ui-btn-icon-left ui-icon-action" id="btn" href="#pgMenu" data-transition="slide">Login</a>
+	<a class="ui-btn ui-corner-all ui-btn-icon-left ui-icon-action" id="btn" href="#pgRegister" data-transition="slide">Sign Up</a>
+</div></section><section data-role="page" id="pgRegister"><div data-role="header">
+	<h1>Sign Up</h1>
+</div>
+<div data-role="content">
+	<form>
+	</form>
+</div></section><section data-role="page" id="pgMenu"><div data-role="header">
+	<h1>CDU Tech Support</h1>
+</div>
+<div data-role="content">
+	<a class="ui-btn ui-corner-all ui-btn-icon-left ui-icon-action" href="#pgMain" data-transition="slide">New Job</a>
+	<a class="ui-btn ui-corner-all ui-btn-icon-left ui-icon-action" href="#pgMain" data-transition="slide">Review Jobs</a>
+</div></section><section data-role="page" id="pgMain"><div data-role="header">
+		<h1>CDU Tech Support</h1>
+</div>
+<div data-role="tabs">
+	<div data-role="navbar">
+		<ul>
+			<li><a href="#tabOverview" data-theme="a" data-ajax="false">Overview</a></li>
+			<li><a href="#tabCreate" data-theme="a" data-ajax="false">Create</a></li>
+		</ul>
+	</div>
+	<div id="tabOverview" class="ui-content">
 		<div data-role="tabs">
 			<div data-role="navbar">
 				<ul>
-					<li><a href="#tabOverview" data-theme="a" data-ajax="false">Overview</a></li>
-					<li><a href="#tabCreate" data-theme="a" data-ajax="false">Create</a></li>
+					<li><a href="#tabOverviewActive">Active</a></li>
+					<li><a href="#tabOverviewCompleted">Completed</a></li>
 				</ul>
 			</div>
-			<div id="tabOverview" class="ui-content">
-				<div data-role="tabs">
-					<div data-role="navbar">
-						<ul>
-							<li><a href="#tabOverviewActive">Active</a></li>
-							<li><a href="#tabOverviewCompleted">Completed</a></li>
-						</ul>
-					</div>
-					<div id="tabOverviewActive" class="ui-content">
-						<table data-role="table" id="tblActive" data-filter="true">
-							<thead>
-								<tr>
-									<th>Asset</th>
-									<th data-priority="1">Description</th>
-								</tr>
-							</thead>
-							<tbody>
-								<tr>
-									<td>1234</td>
-									<td>abcdefgh</td>
-								</tr>
-							</tbody>
-						</table>
-					</div>
-					<div id="tabOverviewCompleted" class="ui-content">
-						<table data-role="table" id="tblCompleted" data-filter="true">
-							<thead>
-								<tr>
-									<th>Asset</th>
-									<th data-priority="1">Description</th>
-								</tr>
-							</thead>
-							<tbody>
-								<tr>
-									<td>12351</td>
-									<td>abcdefgh</td>
-								</tr>
-							</tbody>
-						</table>
-					</div>
-				</div>
+			<div id="tabOverviewActive" class="ui-content">
+				<table data-role="table" id="tblActive" data-filter="true">
+					<thead>
+						<tr>
+							<th>Asset</th>
+							<th data-priority="1">Description</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>1234</td>
+							<td>abcdefgh</td>
+						</tr>
+					</tbody>
+				</table>
 			</div>
-			<div id="tabCreate" class="ui-content">
-				<form>
-					<label for=""></label>
-				</form>
+			<div id="tabOverviewCompleted" class="ui-content">
+				<table data-role="table" id="tblCompleted" data-filter="true">
+					<thead>
+						<tr>
+							<th>Asset</th>
+							<th data-priority="1">Description</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>12351</td>
+							<td>abcdefgh</td>
+						</tr>
+					</tbody>
+				</table>
 			</div>
 		</div>
-	</section >
-</body>
+	</div>
+	<div id="tabCreate" class="ui-content">
+		<form>
+			<label for=""></label>
+		</form>
+	</div>
+</div></section></body>
 </html>
