@@ -29,8 +29,35 @@
 </div>
 <div data-role="content">
 	<form>
+
+		<label for="username">Name</label>
+		<input type="text" name="username" id="username" />
+
+		<label for="username">SurName</label>
+		<input type="text" name="surname" id="surname" />
+         
+                <label for="username">Age</label>
+		<input type="text" name="age" id="age" />
+
+		<label for="username">Work number</label>
+		<input type="number" name="worknumber" id="worknumber" />
+		
+                <label for="username">Mobile Number</label>
+		<input type="number" name="mobilenumber" id="mobilenumber" />
+		
+		<label for="username">Job Status</label>
+		<input type="text" name="jobstatus" id="jobstatus" />
+
+                <label for="password">Password</label>
+		<input type="password" name="password" id="password" />
+		
+		<label for="password">Re Type Password</label> 
+		<input type="password" name="password" id="password" /> 
+
+	
 	</form>
-</div></section><section data-role="page" id="pgMenu"><div data-role="header">
+</div>
+</section><section data-role="page" id="pgMenu"><div data-role="header">
 	<h1>CDU Tech Support</h1>
 </div>
 <div data-role="content">
@@ -89,9 +116,47 @@
 		</div>
 	</div>
 	<div id="tabCreate" class="ui-content">
-		<form>
-			<label for=""></label>
-		</form>
+		<div data-role="tabs">
+			<div data-role="navbar">
+				<ul>
+					<li><a href="#tabOverviewActive">Active</a></li>
+					<li><a href="#tabOverviewCompleted">Completed</a></li>
+				</ul>
+			</div>
+			<div id="tabOverviewActive" class="ui-content">
+				<table data-role="table" id="tblActive" data-filter="true">
+					<thead>
+						<tr>
+							<th>Asset</th>
+							<th data-priority="1">Description</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>1234888</td>
+							<td>abcdefgh</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<div id="tabOverviewCompleted" class="ui-content">
+				<table data-role="table" id="tblCompleted" data-filter="true">
+					<thead>
+						<tr>
+							<th>Asset</th>
+							<th data-priority="1">Description</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>123777</td>
+							<td>abcdefgh</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
 	</div>
-</div></section></body>
+</div>
+</section></body>
 </html>
