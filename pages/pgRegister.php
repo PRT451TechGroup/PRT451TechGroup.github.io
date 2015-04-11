@@ -13,6 +13,9 @@
                 <label for="username">Age</label>
 		<input type="text" name="username" id="username" />
 
+		<label for="username">Work number</label>
+		<input type="text" name="username" id="username" />
+		
                 <label for="username">Mobile Number</label>
 		<input type="text" name="username" id="username" />
 
