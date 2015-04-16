@@ -9,5 +9,5 @@
 		<input type="password" name="password" id="password" />
 	</form>
 	<a class="ui-btn ui-corner-all ui-btn-icon-left ui-icon-action" id="btn" href="#pgMenu" data-transition="slide">Login</a>
-	<a class="ui-btn ui-corner-all ui-btn-icon-left ui-icon-action" id="btn" href="#pgRegister" data-transition="slide">Sign Up</a>
+	<!-- <a class="ui-btn ui-corner-all ui-btn-icon-left ui-icon-action" id="btn" href="#pgRegister" data-transition="slide">Sign Up</a> -->
 </div>
