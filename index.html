@@ -117,25 +117,39 @@
 	</div>
 	<div id="tabCreate" class="ui-content">
 		<form>
-			<label for="txtJobName">Job Name</label>
-			<input data-clear-btn="true" name="txtJobName" id="txtJobName" value="" type="text" />
-			
-			<label for="fsBuilding">Building</label>
-			<fieldset data-role="controlgroup" data-type="horizontal" name="fsBuilding" id="fsBuilding">
-				<select name="selBuilding" id="selBuilding" data-select="range" data-select-min="1" data-select-max="12">
-				</select>
-				<select name="selRoom" id="selRoom" data-select="range" data-select-min="1" data-select-max="23">
-				</select>
-			</fieldset>
-			
 			<label for="txtLocation">Location</label>
-			<input data-clear-btn="true" name="txtLocation" id="txtLocation" value="" type="text" />
+			<input data-clear-btn="true" name="txtLocation" id="txtJobName" value="" type="text" />
+			
+			<!-- <label for="fsBuilding">Building</label> -->
+			<div class="ui-grid-b">
+				<div class="ui-block-a">
+					<label for="selBuilding">Building</label>
+					<select name="selBuilding" id="selBuilding">
+						<option value="2">2</option>
+						<option value="12">12</option>
+					</select>
+				</div>
+				<div class="ui-block-b">
+					<label for="selFloor">Floor</label>
+					<select name="selFloor" id="selFloor" data-select="range" data-select-min="1" data-select-max="3">
+					</select>
+				</div>
+				<div class="ui-block-c">
+					<label for="selRoom">Room</label>
+					<select name="selRoom" id="selRoom" data-select="range" data-select-min="1" data-select-max="25">
+					</select>
+				</div>
+			</div>
 			
 			<label for="dtTime">Time</label>
 			<input data-clear-btn="true" name="dtTime" id="dtTime" value="" type="datetime" />
 			
-			<label for="rngEquipment">Number of Equipment</label>
-			<input name="rngEquipment" id="rngEquipment" min="1" max="20" value="1" type="range" />
+			<label for="fsEquipment">Number of Equipment</label>
+			<div data-role="controlgroup" data-type="horizontal" id="fsEquipment">
+				<input type="button" value="+" />
+				<input type="text" id="number" value="1" />
+				<button>-</button>
+			</div>
 			
 			<label for="txtSpecification">Specification</label>
 			<textarea name="txtSpecification" id="txtSpecification"></textarea>
