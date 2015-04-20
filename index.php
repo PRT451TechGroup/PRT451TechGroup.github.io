@@ -7,6 +7,7 @@
 	<meta name="apple-mobile-web-app-capable" content="yes">
 	<meta name="author" content="">
 	<link rel="stylesheet" href="jquery/jquery.mobile-1.4.5.css" />
+	<link rel="stylesheet" href="styles/main.css" />
 	<script src="jquery/jquery-1.11.2.min.js"></script>
 	<script src="jquery/jquery.mobile-1.4.5.min.js"></script>
 	<script src="scripts/main.js"></script>

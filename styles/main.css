@@ -1,0 +1,12 @@
+#fsEquipment .ui-block-a, #fsEquipment .ui-block-d
+{
+	max-width: 4em;
+}
+#fsEquipment .ui-block-b, #fsEquipment .ui-block-c
+{
+	max-width: 4em;
+}
+#fsEquipment input
+{
+	text-align: center;
+}

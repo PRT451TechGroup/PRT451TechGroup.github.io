@@ -53,9 +53,8 @@
 	<div id="tabCreate" class="ui-content">
 		<form>
 			<label for="txtLocation">Location</label>
-			<input data-clear-btn="true" name="txtLocation" id="txtJobName" value="" type="text" />
+			<input data-clear-btn="true" name="txtLocation" id="txtLocation" value="" type="text" />
 			
-			<!-- <label for="fsBuilding">Building</label> -->
 			<div class="ui-grid-b">
 				<div class="ui-block-a">
 					<label for="selBuilding">Building</label>
@@ -76,15 +75,19 @@
 				</div>
 			</div>
 			
-			<label for="dtTime">Time</label>
-			<input data-clear-btn="true" name="dtTime" id="dtTime" value="" type="datetime" />
+			<label for="dtTime">Due Date and Time</label>
+			<input data-clear-btn="true" name="dtTime" id="dtTime" value="" type="date" />
 			
 			<label for="fsEquipment">Number of Equipment</label>
-			<div data-role="controlgroup" data-type="horizontal" id="fsEquipment">
-				<input type="button" value="+" />
-				<input type="text" id="number" value="1" />
-				<input type="button" value="-" />
+			<div class="ui-grid-c" id="fsEquipment">
+				<div class="ui-block-a"><input type="button" value="-" id="btnNeM" /></div>
+				<div class="ui-block-b"><input type="text" id="txtEquip0" name="txtEquip0" value="0" readonly="true" /></div>
+				<div class="ui-block-c"><input type="text" id="txtEquip1" name="txtEquip1" value="1" readonly="true" /></div>
+				<div class="ui-block-d"><input type="button" value="+" id="btnNeP" /></div>
 			</div>
+			
+			<label for="txtAssetNo">Asset Number</label>
+			<input type="text" id="txtAssetNo" name="txtAssetNo" />
 			
 			<label for="txtSpecification">Specification</label>
 			<textarea name="txtSpecification" id="txtSpecification"></textarea>
