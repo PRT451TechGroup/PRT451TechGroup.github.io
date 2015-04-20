@@ -4,7 +4,7 @@
 <div data-role="tabs">
 	<div data-role="navbar">
 		<ul>
-			<li><a href="#tabOverview" data-theme="a" data-ajax="false">Overview</a></li>
+			<li><a href="#tabOverview" data-theme="a" data-ajax="false">Review</a></li>
 			<li><a href="#tabCreate" data-theme="a" data-ajax="false">Create</a></li>
 		</ul>
 	</div>
