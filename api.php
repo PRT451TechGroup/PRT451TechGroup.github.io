@@ -24,9 +24,12 @@ class DataManager
 	{
 		$conn = $this->open_connection();
 		$stmt = $conn->prepare('INSERT INTO Jobs (Location, Building, Floor, Room, DueDate, NoEquipment, AssetNo, Specification) VALUES (?, ?, ?, ?, ?, ?, ?, ?)');
-		echo $stmt->execute(array($location, $building, $floor, $room, $duedate, $noequipment, $assetno, $specification));
-		//$stmt->close();
-		//$conn->close();
+		$stmt->execute(array($location, $building, $floor, $room, $duedate, $noequipment, $assetno, $specification));
+	}
+	public function get_jobs()
+	{
+		$conn = $this->open_connection();
+		return $conn->query('SELECT FROM Jobs (JobID, Location, Building, Floor, Room, DueDate, NoEquipment, AssetNo, Specification)');
 	}
 }
 
