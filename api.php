@@ -18,30 +18,20 @@ class DataManager
 	}
 	private function open_connection()
 	{
-		return new mysqli($this->host, $this->user, $this->password, $this->database);
+		return new PDO('mysql:host=' . $this->host . ';dbname=' . $this->database, $this->user, $this->password);
 	}
 	public function new_job($location, $building, $floor, $room, $duedate, $noequipment, $assetno, $specification)
 	{
-		$conn = open_connection();
-		
-		if ($conn->connect_error)
-		{
-			die("Connect Error: {$conn->connect_error}");
-		}
-		
-		$stmt = $conn->stmt_init();
-		
-		if ($stmt->prepare('INSERT INTO Jobs (Location, Building, Floor, Room, DueDate, NoEquipment, AssetNo, Specification) VALUES (?, ?, ?, ?, ?, ?, ?, ?)'))
-		{
-			$stmt->bind_param('siiisiss', $location, $building, $floor, $room, $duedate, $noequipment, $assetno, $specification);
-			$stmt->execute();
-			$stmt->close();
-		}
-		
-		$conn->close();
+		$conn = $this->open_connection();
+		$stmt = $conn->prepare('INSERT INTO Jobs (Location, Building, Floor, Room, DueDate, NoEquipment, AssetNo, Specification) VALUES (?, ?, ?, ?, ?, ?, ?, ?)');
+		echo $stmt->execute(array($location, $building, $floor, $room, $duedate, $noequipment, $assetno, $specification));
+		//$stmt->close();
+		//$conn->close();
 	}
 }
 
 $dbm = new DataManager($cfg['mysql']['host'], $cfg['mysql']['database'], $cfg['mysql']['user'], $cfg['mysql']['password']);
+
+//$dbm->new_job("TestLocation", 1, 2, 3, "2015-04-23 16:11:00", 10, "ASSET0", "Specification123");
 
 ?>
