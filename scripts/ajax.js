@@ -5,19 +5,20 @@ var DataManager =
 		var queryData =
 		{
 			"action": "new_job",
-			"locatiom": location,
+			"location": location,
 			"building": building,
 			"floor": floor,
+			"room": room,
 			"duedate": duedate,
 			"noequipment": noequipment,
 			"assetno": assetno,
 			"specification": specification
 		};
-		return $.ajax("api.php", {data: queryData});
+		return $.ajax("api.php", {data: queryData, dataType: "json"});
 	},
 	show_jobs: function()
 	{
-		return $.ajax("api.php", {data: {"action": "show_jobs"}});
+		return $.ajax("api.php", {data: {"action": "show_jobs"}, dataType: "json"});
 	}
 
 }

@@ -10,6 +10,7 @@
 	<link rel="stylesheet" href="styles/main.css" />
 	<script src="jquery/jquery-1.11.2.min.js"></script>
 	<script src="jquery/jquery.mobile-1.4.5.min.js"></script>
+	<script src="scripts/ajax.js"></script>
 	<script src="scripts/main.js"></script>
 </head>
 <body id="page_body">
@@ -86,15 +87,16 @@
 				<table data-role="table" id="tblActive" data-filter="true">
 					<thead>
 						<tr>
-							<th>Asset</th>
-							<th data-priority="1">Description</th>
+							<th>Job ID</th>
+							<th data-priority="1">Location</th>
+							<th data-priority="1">Room</th>
+							<th data-priority="1">Due Date</th>
+							<th data-priority="1">Number of Equipment</th>
+							<th data-priority="1">Asset Number</th>
+							<th data-priority="2">Specification</th>
 						</tr>
 					</thead>
 					<tbody>
-						<tr>
-							<td>1234</td>
-							<td>abcdefgh</td>
-						</tr>
 					</tbody>
 				</table>
 			</div>
@@ -107,17 +109,13 @@
 						</tr>
 					</thead>
 					<tbody>
-						<tr>
-							<td>12351</td>
-							<td>abcdefgh</td>
-						</tr>
 					</tbody>
 				</table>
 			</div>
 		</div>
 	</div>
 	<div id="tabCreate" class="ui-content">
-		<form>
+		<form id="frmCreate">
 			<label for="txtLocation">Location</label>
 			<input data-clear-btn="true" name="txtLocation" id="txtLocation" value="" type="text" />
 			

@@ -20,16 +20,20 @@ class DataManager
 	{
 		return new PDO('mysql:host=' . $this->host . ';dbname=' . $this->database, $this->user, $this->password);
 	}
-	public function new_job($location, $building, $floor, $room, $duedate, $noequipment, $assetno, $specification)
+	public function new_job($location, $building, $floor, $room, $duedate, $noequipment, $assetno, $specification, &$out)
 	{
 		$conn = $this->open_connection();
 		$stmt = $conn->prepare('INSERT INTO Jobs (Location, Building, Floor, Room, DueDate, NoEquipment, AssetNo, Specification) VALUES (?, ?, ?, ?, ?, ?, ?, ?)');
-		return $stmt->execute(array($location, $building, $floor, $room, $duedate, $noequipment, $assetno, $specification));
+		$rv = $stmt->execute(array($location, $building, $floor, $room, $duedate, $noequipment, $assetno, $specification));
+		
+		$out = $rv ? $conn->lastInsertId() : $stmt->errorInfo();
+		
+		return $rv;
 	}
 	public function get_jobs()
 	{
 		$conn = $this->open_connection();
-		return $conn->query('SELECT JobID, Location, Building, Floor, Room, DueDate, NoEquipment, AssetNo, Specification FROM Jobs');
+		return $conn->query('SELECT JobID, Location, Building, Floor, Room, DueDate, NoEquipment, AssetNo, Specification FROM Jobs ORDER BY JobID');
 	}
 }
 
@@ -37,10 +41,12 @@ $dbm = new DataManager($cfg['mysql']['host'], $cfg['mysql']['database'], $cfg['m
 
 if ($_GET["action"] == "new_job")
 {
-	$nj["success"] = $dbm->new_job($_GET["location"], intval($_GET["building"]), intval($_GET["floor"]), intval($_GET["room"]), $_GET["duedate"], intval($_GET["noequipment"]), $_GET["assetno"], $_GET["specification"]);
+	$out = array();
+	$nj["success"] = $dbm->new_job($_GET["location"], intval($_GET["building"]), intval($_GET["floor"]), intval($_GET["room"]), $_GET["duedate"], intval($_GET["noequipment"]), $_GET["assetno"], $_GET["specification"], $out);
 	
 	if ($nj["success"])
 		$nj["data"] = array(
+			"JobID" => $out,
 			"Location" => $_GET["location"],
 			"Building" => $_GET["building"],
 			"Floor" => $_GET["floor"],
@@ -49,6 +55,11 @@ if ($_GET["action"] == "new_job")
 			"NoEquipment" => $_GET["noequipment"],
 			"AssetNo" => $_GET["assetno"],
 			"Specification" => $_GET["specification"]);
+	else
+	{
+		$nj["data"] = $out;
+		$nj["success"] = false;
+	}
 	
 	echo json_encode($nj);
 }
@@ -84,7 +95,7 @@ else if ($_GET["action"] == "show_jobs")
 			$response["data"] = array();
 	
 		$response["success"] = true;
-		echo json_encode($data);
+		echo json_encode($response);
 	}
 }
 
