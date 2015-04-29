@@ -35,6 +35,42 @@ class DataManager
 		$conn = $this->open_connection();
 		return $conn->query('SELECT JobID, Location, Building, Floor, Room, DueDate, NoEquipment, AssetNo, Specification FROM Jobs ORDER BY JobID');
 	}
+	public function password_verify($username, $password)
+	{
+		$conn = $this->open_connection();
+		$stmt = $conn->prepare('SELECT Username FROM Logins WHERE Username = ? AND Password = ?');
+		
+		if ($stmt->execute(array($username, $password)))
+		{
+			$res = $stmt->fetchAll();
+			foreach($res as $row)
+			{
+				if ($row['Username'] == $username)
+					return true;
+			}
+		}
+		return false;
+	}
+	public function session_verify()
+	{
+		session_start();
+		
+		if (isset($_SESSION["username"]))
+		{
+			$conn = $this->open_connection();
+			$stmt = $conn->prepare('SELECT Username FROM Logins WHERE Username = ?');
+			if ($stmt->execute(array($_SESSION["username"])))
+			{
+				$res = $stmt->fetchAll();
+				foreach($res as $row)
+				{
+					if ($row['Username'] == $_SESSION["username"])
+						return true;
+				}
+			}
+		}
+		return false;
+	}
 }
 
 $dbm = new DataManager($cfg['mysql']['host'], $cfg['mysql']['database'], $cfg['mysql']['user'], $cfg['mysql']['password']);
@@ -65,6 +101,8 @@ if ($_GET["action"] == "new_job")
 }
 else if ($_GET["action"] == "show_jobs")
 {
+	if (!$dbm->session_verify())
+		die("No Session");
 	$dbj = $dbm->get_jobs();
 	
 	if (!$dbj)
@@ -98,7 +136,27 @@ else if ($_GET["action"] == "show_jobs")
 		echo json_encode($response);
 	}
 }
-
+else if ($_GET["action"] == "login")
+{
+	$username = $_GET["username"];
+	$password = $_GET["password"];
+	
+	
+	$response["username"] = $username;
+	if ($response["success"] = $dbm->password_verify($username, $password))
+	{
+		session_start();
+		$_SESSION["username"] = $username;
+	}
+	
+	echo json_encode($response);
+}
+else if ($_GET["action"] == "verify_session")
+{
+	$response["success"] = $dbm->session_verify();
+	
+	echo json_encode($response);
+}
 
 
 ?>

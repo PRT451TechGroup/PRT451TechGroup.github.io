@@ -19,6 +19,13 @@ var DataManager =
 	show_jobs: function()
 	{
 		return $.ajax("api.php", {data: {"action": "show_jobs"}, dataType: "json"});
+	},
+	login: function(username, password)
+	{
+		return $.ajax("api.php", {data: {"action": "login", "username": username, "password": password}, dataType: "json"});
+	},
+	verify_session: function()
+	{
+		return $.ajax("api.php", {data: {"action": "verify_session"}, dataType: "json"});
 	}
-
 }

@@ -154,6 +154,22 @@ var TechSupport =
 		});
 		
 		
+	},
+	loginButtons: function()
+	{
+		$("#frmLogin").submit(function()
+		{
+			var ajax = DataManager.login($("#txtUsername").val(), $("#txtPassword").val());
+			ajax.done(function(data)
+			{
+				if (data.success)
+				{
+					$("body").pagecontainer("change", "#pgMenu", {});
+					
+				}
+			});
+			return false;
+		});
 	}
 }
 $(document).ready(function()
@@ -163,4 +179,5 @@ $(document).ready(function()
 	TechSupport.addJobButtons();
 	TechSupport.equipButtons();
 	TechSupport.menuLoader();
+	TechSupport.loginButtons();
 });
