@@ -1,11 +1,11 @@
 var DataManager =
 {
-	new_job: function(location, building, floor, room, duedate, noequipment, assetno, specification)
+	new_job: function(equipmentname, building, floor, room, duedate, noequipment, assetno, specification)
 	{
 		var queryData =
 		{
 			"action": "new_job",
-			"location": location,
+			"equipmentname": equipmentname,
 			"building": building,
 			"floor": floor,
 			"room": room,

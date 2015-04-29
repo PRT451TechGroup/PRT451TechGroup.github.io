@@ -103,7 +103,7 @@ var TechSupport =
 		$("#frmCreate").submit(function()
 		{
 			var ajax = DataManager.new_job(
-				$("#txtLocation").val(),
+				$("#txtEquipmentName").val(),
 				$("#selBuilding").val(),
 				$("#selFloor").val(),
 				$("#selRoom").val(),
@@ -126,9 +126,10 @@ var TechSupport =
 	addJobEntry: function(data)
 	{
 		var tr = $("<tr />");
-		tr.append($("<th />").text(data.JobID));
-		tr.append($("<td />").text(data.Location));
-		tr.append($("<td />").text(data.Building + "." + data.Floor + "." + data.Room));
+		var location = data.Building + "." + data.Floor + "." + data.Room;
+		tr.append($("<th />").text(data.EquipmentName + " - " + location));
+		tr.append($("<td />").text(data.EquipmentName));
+		tr.append($("<td />").text(location));
 		tr.append($("<td />").text(data.DueDate));
 		tr.append($("<td />").text(data.NoEquipment));
 		tr.append($("<td />").text(data.AssetNo));

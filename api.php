@@ -20,11 +20,11 @@ class DataManager
 	{
 		return new PDO('mysql:host=' . $this->host . ';dbname=' . $this->database, $this->user, $this->password);
 	}
-	public function new_job($location, $building, $floor, $room, $duedate, $noequipment, $assetno, $specification, &$out)
+	public function new_job($equipmentname, $building, $floor, $room, $duedate, $noequipment, $assetno, $specification, &$out)
 	{
 		$conn = $this->open_connection();
-		$stmt = $conn->prepare('INSERT INTO Jobs (Location, Building, Floor, Room, DueDate, NoEquipment, AssetNo, Specification) VALUES (?, ?, ?, ?, ?, ?, ?, ?)');
-		$rv = $stmt->execute(array($location, $building, $floor, $room, $duedate, $noequipment, $assetno, $specification));
+		$stmt = $conn->prepare('INSERT INTO Jobs (EquipmentName, Building, Floor, Room, DueDate, NoEquipment, AssetNo, Specification) VALUES (?, ?, ?, ?, ?, ?, ?, ?)');
+		$rv = $stmt->execute(array($equipmentname, $building, $floor, $room, $duedate, $noequipment, $assetno, $specification));
 		
 		$out = $rv ? $conn->lastInsertId() : $stmt->errorInfo();
 		
@@ -33,7 +33,7 @@ class DataManager
 	public function get_jobs()
 	{
 		$conn = $this->open_connection();
-		return $conn->query('SELECT JobID, Location, Building, Floor, Room, DueDate, NoEquipment, AssetNo, Specification FROM Jobs ORDER BY JobID');
+		return $conn->query('SELECT JobID, EquipmentName, Building, Floor, Room, DueDate, NoEquipment, AssetNo, Specification FROM Jobs ORDER BY JobID');
 	}
 	public function password_verify($username, $password)
 	{
@@ -78,12 +78,12 @@ $dbm = new DataManager($cfg['mysql']['host'], $cfg['mysql']['database'], $cfg['m
 if ($_GET["action"] == "new_job")
 {
 	$out = array();
-	$nj["success"] = $dbm->new_job($_GET["location"], intval($_GET["building"]), intval($_GET["floor"]), intval($_GET["room"]), $_GET["duedate"], intval($_GET["noequipment"]), $_GET["assetno"], $_GET["specification"], $out);
+	$nj["success"] = $dbm->new_job($_GET["equipmentname"], intval($_GET["building"]), intval($_GET["floor"]), intval($_GET["room"]), $_GET["duedate"], intval($_GET["noequipment"]), $_GET["assetno"], $_GET["specification"], $out);
 	
 	if ($nj["success"])
 		$nj["data"] = array(
 			"JobID" => $out,
-			"Location" => $_GET["location"],
+			"EquipmentName" => $_GET["equipmentname"],
 			"Building" => $_GET["building"],
 			"Floor" => $_GET["floor"],
 			"Room" => $_GET["room"],
@@ -117,7 +117,7 @@ else if ($_GET["action"] == "show_jobs")
 		{
 			$data[$r++] = array(
 				"JobID" => $row["JobID"],
-				"Location" => $row["Location"],
+				"EquipmentName" => $row["EquipmentName"],
 				"Building" => $row["Building"],
 				"Floor" => $row["Floor"],
 				"Room" => $row["Room"],

@@ -1,3 +1,6 @@
+<?php
+session_start();
+?>
 <!DOCTYPE html> 
 <html lang="en">
 <head>
@@ -14,7 +17,7 @@
 	<script src="scripts/main.js"></script>
 </head>
 <?php
-session_start();
+
 function addPage($id)
 {
 	echo "<section data-role=\"page\" id=\"$id\">";

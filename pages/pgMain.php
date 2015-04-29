@@ -21,8 +21,8 @@
 					<thead>
 						<tr>
 							<th>Job ID</th>
+							<th data-priority="1">Equipment Name</th>
 							<th data-priority="1">Location</th>
-							<th data-priority="1">Room</th>
 							<th data-priority="1">Due Date</th>
 							<th data-priority="1">Number of Equipment</th>
 							<th data-priority="1">Asset Number</th>
@@ -49,10 +49,11 @@
 	</div>
 	<div id="tabCreate" class="ui-content">
 		<form id="frmCreate">
-			<label for="txtLocation">Location</label>
-			<input data-clear-btn="true" name="txtLocation" id="txtLocation" value="" type="text" />
+			<label for="txtEquipmentName">Equipment Name</label>
+			<input data-clear-btn="true" name="txtEquipmentName" id="txtEquipmentName" value="" type="text" />
 			
-			<div class="ui-grid-b">
+			<label for="divLocation">Location</label>
+			<div class="ui-grid-b" id="divLocation">
 				<div class="ui-block-a">
 					<label for="selBuilding">Building</label>
 					<select name="selBuilding" id="selBuilding">
