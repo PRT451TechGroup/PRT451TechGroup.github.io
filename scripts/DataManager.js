@@ -1,6 +1,6 @@
-var DataManager =
+var DataManager = new (function()
 {
-	new_job: function(equipmentname, building, floor, room, duedate, noequipment, assetno, specification)
+	this.new_job = function(equipmentname, building, floor, room, duedate, noequipment, assetno, specification)
 	{
 		var queryData =
 		{
@@ -15,17 +15,21 @@ var DataManager =
 			"specification": specification
 		};
 		return $.ajax("api.php", {data: queryData, dataType: "json"});
-	},
-	show_jobs: function()
+	};
+	this.show_jobs = function()
 	{
 		return $.ajax("api.php", {data: {"action": "show_jobs"}, dataType: "json"});
-	},
-	login: function(username, password)
+	};
+	this.login = function(username, password)
 	{
 		return $.ajax("api.php", {data: {"action": "login", "username": username, "password": password}, dataType: "json"});
-	},
-	verify_session: function()
+	};
+	this.session_verify = function()
 	{
-		return $.ajax("api.php", {data: {"action": "verify_session"}, dataType: "json"});
+		return $.ajax("api.php", {data: {"action": "session_verify"}, dataType: "json"});
+	};
+	this.session_failure = function(data)
+	{
+		return !data.success && data.error === "nosession";
 	}
-}
+})();

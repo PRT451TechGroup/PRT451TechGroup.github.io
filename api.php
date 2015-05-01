@@ -50,6 +50,7 @@ class DataManager
 			}
 		}
 		return false;
+		
 	}
 	public function session_verify()
 	{
@@ -72,91 +73,117 @@ class DataManager
 		return false;
 	}
 }
+class Application
+{
+	private static $__instance = NULL;
+	private $functions;
+	private $pfunctions;
+	protected function __construct()
+	{
+		$this->functions['new_job'] = function($args, $dbm)
+		{
+			$out = array();
+			$r = $dbm->new_job($args["equipmentname"], intval($args["building"]), intval($args["floor"]),
+				intval($args["room"]), $args["duedate"], intval($args["noequipment"]), $args["assetno"], $args["specification"], $out);
+			
+			if ($nj["success"])
+			{
+				return array("success" => true,
+					"data" => array(
+					"	JobID" => $out,
+						"EquipmentName" => $args["equipmentname"],
+						"Building" => $args["building"],
+						"Floor" => $args["floor"],
+						"Room" => $args["room"],
+						"DueDate" => $args["duedate"],
+						"NoEquipment" => $args["noequipment"],
+						"AssetNo" => $args["assetno"],
+						"Specification" => $args["specification"]));
+			}
+			else
+			{
+				return array("data" => array(), "success" => false);
+			}
+			return $nj;
+		};
+		$this->functions['show_jobs'] = function($args, $dbm)
+		{
+			$dbj = $dbm->get_jobs();
+			if (!$dbj)
+			{
+				return array("success" => false);
+			}
+			else
+			{
+				$r = 0;
+				foreach($dbj as $row)
+				{
+					$data[$r++] = array(
+						"JobID" => $row["JobID"],
+						"EquipmentName" => $row["EquipmentName"],
+						"Building" => $row["Building"],
+						"Floor" => $row["Floor"],
+						"Room" => $row["Room"],
+						"DueDate" => $row["DueDate"],
+						"NoEquipment" => $row["NoEquipment"],
+						"AssetNo" => $row["AssetNo"],
+						"Specification" => $row["Specification"]);
+				}
+				
+				return array("success" => true, "data" => $r ? $data : array());
+			}
+		};
+		$this->pfunctions['login'] = function($args, $dbm)
+		{
+			$username = $args['username'];
+			$password = $args['password'];
+			$response["username"] = $username;
+			if ($response["success"] = $dbm->password_verify($username, $password))
+			{
+				session_start();
+				$_SESSION["username"] = $username;
+			}
+			return $response;
+		};
+		$this->pfunctions['session_verify'] = function($args, $dbm)
+		{
+			return array("success" => $dbm->session_verify());
+		};
+	}
+	protected function __clone()
+	{
+	}
+	public static function getInstance()
+	{
+		if (self::$__instance == NULL)
+			self::$__instance = new Application();
+		
+		return self::$__instance;
+	}
+	public function response($action, $args, $dbm)
+	{
+		if (isset($this->pfunctions[$action]))
+		{
+			$func = $this->pfunctions[$action];
+		}
+		if (isset($this->functions[$action]))
+		{
+			if ($dbm->session_verify())
+				$func = $this->functions[$action];
+			else
+			{
+				return array("success" => false, "error" => "nosession");
+			}
+		}
+		
+		return $func($args, $dbm);
+	}
+}
 
 $dbm = new DataManager($cfg['mysql']['host'], $cfg['mysql']['database'], $cfg['mysql']['user'], $cfg['mysql']['password']);
+$app = Application::getInstance();
 
-if ($_GET["action"] == "new_job")
-{
-	$out = array();
-	$nj["success"] = $dbm->new_job($_GET["equipmentname"], intval($_GET["building"]), intval($_GET["floor"]), intval($_GET["room"]), $_GET["duedate"], intval($_GET["noequipment"]), $_GET["assetno"], $_GET["specification"], $out);
-	
-	if ($nj["success"])
-		$nj["data"] = array(
-			"JobID" => $out,
-			"EquipmentName" => $_GET["equipmentname"],
-			"Building" => $_GET["building"],
-			"Floor" => $_GET["floor"],
-			"Room" => $_GET["room"],
-			"DueDate" => $_GET["duedate"],
-			"NoEquipment" => $_GET["noequipment"],
-			"AssetNo" => $_GET["assetno"],
-			"Specification" => $_GET["specification"]);
-	else
-	{
-		$nj["data"] = $out;
-		$nj["success"] = false;
-	}
-	
-	echo json_encode($nj);
-}
-else if ($_GET["action"] == "show_jobs")
-{
-	if (!$dbm->session_verify())
-		die("No Session");
-	$dbj = $dbm->get_jobs();
-	
-	if (!$dbj)
-	{
-		$response["success"] = false;
-		echo json_encode($data);
-	}
-	else
-	{
-		$r = 0;
-		foreach($dbj as $row)
-		{
-			$data[$r++] = array(
-				"JobID" => $row["JobID"],
-				"EquipmentName" => $row["EquipmentName"],
-				"Building" => $row["Building"],
-				"Floor" => $row["Floor"],
-				"Room" => $row["Room"],
-				"DueDate" => $row["DueDate"],
-				"NoEquipment" => $row["NoEquipment"],
-				"AssetNo" => $row["AssetNo"],
-				"Specification" => $row["Specification"]);
-		}
-	
-		if ($r != 0)
-			$response["data"] = $data;
-		else
-			$response["data"] = array();
-	
-		$response["success"] = true;
-		echo json_encode($response);
-	}
-}
-else if ($_GET["action"] == "login")
-{
-	$username = $_GET["username"];
-	$password = $_GET["password"];
-	
-	
-	$response["username"] = $username;
-	if ($response["success"] = $dbm->password_verify($username, $password))
-	{
-		session_start();
-		$_SESSION["username"] = $username;
-	}
-	
-	echo json_encode($response);
-}
-else if ($_GET["action"] == "verify_session")
-{
-	$response["success"] = $dbm->session_verify();
-	
-	echo json_encode($response);
-}
-
+$res = $app->response($_GET['action'], $_GET, $dbm);
+echo json_encode($res);
 
 ?>

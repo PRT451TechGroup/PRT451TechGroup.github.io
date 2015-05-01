@@ -9,42 +9,7 @@
 		</ul>
 	</div>
 	<div id="tabOverview" class="ui-content">
-		<div data-role="tabs">
-			<div data-role="navbar">
-				<ul>
-					<li><a href="#tabOverviewActive">Active</a></li>
-					<li><a href="#tabOverviewCompleted">Completed</a></li>
-				</ul>
-			</div>
-			<div id="tabOverviewActive" class="ui-content">
-				<table data-role="table" id="tblActive" data-filter="true">
-					<thead>
-						<tr>
-							<th>Job ID</th>
-							<th data-priority="1">Equipment Name</th>
-							<th data-priority="1">Location</th>
-							<th data-priority="1">Due Date</th>
-							<th data-priority="1">Number of Equipment</th>
-							<th data-priority="1">Asset Number</th>
-							<th data-priority="2">Specification</th>
-						</tr>
-					</thead>
-					<tbody>
-					</tbody>
-				</table>
-			</div>
-			<div id="tabOverviewCompleted" class="ui-content">
-				<table data-role="table" id="tblCompleted" data-filter="true">
-					<thead>
-						<tr>
-							<th>Asset</th>
-							<th data-priority="1">Description</th>
-						</tr>
-					</thead>
-					<tbody>
-					</tbody>
-				</table>
-			</div>
+		<div data-role="collapsible-set" id="divJobs">
 		</div>
 	</div>
 	<div id="tabCreate" class="ui-content">

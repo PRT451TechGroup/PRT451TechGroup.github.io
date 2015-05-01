@@ -13,7 +13,10 @@ session_start();
 	<link rel="stylesheet" href="styles/main.css" />
 	<script src="jquery/jquery-1.11.2.min.js"></script>
 	<script src="jquery/jquery.mobile-1.4.5.min.js"></script>
-	<script src="scripts/ajax.js"></script>
+	<script src="scripts/Extensions.js"></script>
+	<script src="scripts/DataManager.js"></script>
+	<script src="scripts/JobsList.js"></script>
+	<script src="scripts/Application.js"></script>
 	<script src="scripts/main.js"></script>
 </head>
 <?php
