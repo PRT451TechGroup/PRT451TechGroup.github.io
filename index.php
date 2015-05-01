@@ -15,7 +15,8 @@ session_start();
 	<script src="jquery/jquery.mobile-1.4.5.min.js"></script>
 	<script src="scripts/Extensions.js"></script>
 	<script src="scripts/DataManager.js"></script>
-	<script src="scripts/JobsList.js"></script>
+	<script src="scripts/JobView.js"></script>
+	<script src="scripts/JobForm.js"></script>
 	<script src="scripts/Application.js"></script>
 	<script src="scripts/main.js"></script>
 </head>
@@ -31,9 +32,9 @@ function addPage($id)
 <body id="page_body">
 	<?php
 		addPage("pgLogin");
-		addPage("pgRegister");
 		addPage("pgMenu");
 		addPage("pgMain");
+		addPage("pgEdit");
 	?>
 </body>
 </html>

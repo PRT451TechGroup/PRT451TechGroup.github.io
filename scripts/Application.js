@@ -24,72 +24,109 @@ var Application = new (function()
 			"dtTime",
 			"txtAssetNo",
 			"txtSpecification",
-			"divJobs"
+			"lstJobs",
+			"pgEdit",
+			"_txtEquip0",
+			"_txtEquip1",
+			"_btnNeM",
+			"_btnNeP",
+			"_txtEquipmentName",
+			"_selBuilding",
+			"_selFloor",
+			"_selRoom",
+			"_dtTime",
+			"_txtAssetNo",
+			"_txtSpecification",
+			"btnEditCancel"
 		];
 		$.each(props, function(k, v)
 		{
 			$this[v] = $("#" + v);
 		});
 		
-		this.jobsList = new JobsList(this.divJobs);
+		this.jobView = new JobView(this.lstJobs, "pgEdit", new JobForm($("#frmEdit")));
+		this.createForm = new JobForm($("#frmCreate"));
 		this.tab = "review";
+		this.grabList = true;
+		this.editJob = 0;
+	};
+	this.editButtons = function()
+	{
+		this.btnEditCancel.click(function()
+		{
+			$(":mobile-pagecontainer").pagecontainer("change", "#pgMain");
+		})
 	};
 	this.setupInterface = function()
 	{
 		this.initProps();
 		this.mainMenuButtons();
 		this.addJobButtons();
-		this.equipButtons();
 		this.menuLoader();
 		this.loginButtons();
+		this.dataHooks();
+		this.editButtons();
 	};
-	this.equipButtons = function()
+	this.jobListItem = function(v)
 	{
-		var nums = "0123456789";
-		var eq0, eq1;
-		var vl0, vl1;
-		var nem = function()
+		var li = $("<li />");
+		
+		return li;
+	};
+	this.dataHooks = function()
+	{
+		DataManager.on("nosession", function(data)
 		{
-			eq0 = this.txtEquip0;
-			eq1 = this.txtEquip1;
-			vl0 = nums.indexOf(eq0.val());
-			vl1 = nums.indexOf(eq1.val());
-		};
-		$("#btnNeM").click(function()
-		{
-			nem();
-			if (vl0 == 0 && vl1 == 0)
-				return;
-			
-			eq1.val(nums[vl1+1]);
-			
-			if (vl1 == 0)
-			{
-				eq0.val(nums[vl0-1]);
-				eq1.val("9");
-			}
-			else
-			{
-				eq1.val(nums[vl1-1]);
-			}
+			$(":mobile-pagecontainer").pagecontainer("change", "#pgLogin");
 		});
-		$("#btnNeP").click(function()
+		DataManager.on("failure", function(data)
 		{
-			nem();
-			if (vl0 == 9 && vl1 == 9)
+			if (data.action != "session_verify")
 				return;
 			
-			if (vl1 == 9)
+			$(":mobile-pagecontainer").pagecontainer("change", "#pgLogin");
+		});
+		DataManager.on("success", function(data)
+		{
+			if (data.action != "show_jobs")
+				return;
+			
+			$.each(data.data, function(k,v)
 			{
-				eq0.val(nums[vl0+1]);
-				eq1.val("0");
-			}
-			else
-			{
-				eq1.val(nums[vl1+1]);
-			}
+				$this.jobView.add(v);
+			});
+			
+			$this.jobView.refresh();
+		});
+		DataManager.on("success", function(data)
+		{
+			if (data.action != "login")
+				return;
+			
+			$(":mobile-pagecontainer").pagecontainer("change", "#pgMain");
+		});
+		DataManager.on("success", function(data)
+		{
+			if (data.action != "new_job")
+				return;
+			
+			$this.jobView.add(data.data);
+			$this.jobView.refresh();
+			$this.switchTabReview();
+		});
+		DataManager.on("success", function(data)
+		{
+			if (data.action != "update_job")
+				return;
+			
+			alert(JSON.stringify(data));
+		})
+		DataManager.on("failure", function(data)
+		{
+			alert(JSON.stringify(data));
 		});
 	};
+	
 	this.dateStamp = function(dt)
 	{
 		var gf = function(a) { return a.length < 2 ? "0" + a : a; };
@@ -119,31 +156,16 @@ var Application = new (function()
 	{
 		$("a[href='#tabOverview']").click();
 	};
-	this.equipVal = function()
-	{
-		var s = "0123456789";
-		return s.indexOf(this.txtEquip0.val()) * 10 + s.indexOf(this.txtEquip1.val());
-	};
+	
 	this.addJobButtons = function()
 	{
 		this.frmCreate.submit(function()
 		{
-			var ajax = DataManager.new_job(
-				$this.txtEquipmentName.val(),
-				$this.selBuilding.val(),
-				$this.selFloor.val(),
-				$this.selRoom.val(),
-				$this.dtTime.val(),
-				$this.equipVal(),
-				$this.txtAssetNo.val(),
-				$this.txtSpecification.val()
-			);
-			ajax.done(function(data)
-			{
-				$this.jobsList.add(data.data);
-				$this.switchTabReview();
-				$this.frmCreate.trigger("reset");
-			});
+			//alert($this.createForm.EquipmentName());
+			var qdata = {};
+			$this.createForm.dataRequest(qdata);
+			
+			DataManager.new_job(qdata);
 			
 			return false;
 		});
@@ -155,21 +177,11 @@ var Application = new (function()
 		{
 			var ajax = DataManager.show_jobs();
 			
-			ajax.done(function(data)
+			if ($this.grabList)
 			{
-				if (DataManager.session_failure(data))
-				{
-					$(":mobile-pagecontainer").pagecontainer("change", "#pgLogin");
-					return;
-				}
-				
-				$.each(data.data, function(k,v)
-				{
-					$this.jobsList.add(v);
-				});
-				$this.jobsList.refresh();
-			});
-			
+				DataManager.show_jobs();
+				$this.grabList = false;
+			}
 			switch($this.tab)
 			{
 				case "create":
@@ -182,28 +194,14 @@ var Application = new (function()
 		});
 		this.pgMenu.on("pageshow", function()
 		{
-			var ajax = DataManager.session_verify();
-			
-			ajax.done(function(data)
-			{
-				if (!data.success)
-					$(":mobile-pagecontainer" ).pagecontainer("change", "#pgLogin");
-			});
+			DataManager.session_verify();
 		});
 	};
 	this.loginButtons = function()
 	{
 		this.frmLogin.submit(function()
 		{
-			var ajax = DataManager.login($this.txtUsername.val(), $this.txtPassword.val());
-			ajax.done(function(data)
-			{
-				if (data.success)
-				{
-					$("body").pagecontainer("change", "#pgMenu", {});
-					
-				}
-			});
+			DataManager.login($this.txtUsername.val(), $this.txtPassword.val());
 			return false;
 		});
 	};

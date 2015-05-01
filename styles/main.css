@@ -10,6 +10,18 @@
 {
 	text-align: center;
 }
+#_fsEquipment .ui-block-a, #_fsEquipment .ui-block-d
+{
+	max-width: 4em;
+}
+#_fsEquipment .ui-block-b, #_fsEquipment .ui-block-c
+{
+	max-width: 4em;
+}
+#_fsEquipment input
+{
+	text-align: center;
+}
 .job-col h2 .ui-block-b
 {
 	text-align: right;

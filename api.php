@@ -30,6 +30,12 @@ class DataManager
 		
 		return $rv;
 	}
+	public function update_job($equipmentname, $building, $floor, $room, $duedate, $noequipment, $assetno, $specification, $jobid)
+	{
+		$conn = $this->open_connection();
+		$stmt = $conn->prepare('UPDATE Jobs SET EquipmentName=?, Building=?, Floor=?, Room=?, DueDate=?, NoEquipment=?, AssetNo=?, Specification=? WHERE JobID = ?');
+		return $stmt->execute(array($equipmentname, $building, $floor, $room, $duedate, $noequipment, $assetno, $specification, $jobid));
+	}
 	public function get_jobs()
 	{
 		$conn = $this->open_connection();
@@ -82,15 +88,41 @@ class Application
 	{
 		$this->functions['new_job'] = function($args, $dbm)
 		{
-			$out = array();
+			$out = 0;
 			$r = $dbm->new_job($args["equipmentname"], intval($args["building"]), intval($args["floor"]),
 				intval($args["room"]), $args["duedate"], intval($args["noequipment"]), $args["assetno"], $args["specification"], $out);
 			
-			if ($nj["success"])
+			if ($r)
 			{
 				return array("success" => true,
 					"data" => array(
-					"	JobID" => $out,
+						"JobID" => $out,
+						"EquipmentName" => $args["equipmentname"],
+						"Building" => $args["building"],
+						"Floor" => $args["floor"],
+						"Room" => $args["room"],
+						"DueDate" => $args["duedate"],
+						"NoEquipment" => $args["noequipment"],
+						"AssetNo" => $args["assetno"],
+						"Specification" => $args["specification"]));
+			}
+			else
+			{
+				return array("data" => array(), "success" => false);
+			}
+			return $nj;
+		};
+		$this->functions['update_job'] = function($args, $dbm)
+		{
+			$out = 0;
+			$r = $dbm->update_job($args["equipmentname"], intval($args["building"]), intval($args["floor"]),
+				intval($args["room"]), $args["duedate"], intval($args["noequipment"]), $args["assetno"], $args["specification"], $args["jobid"]);
+			
+			if ($r)
+			{
+				return array("success" => true,
+					"data" => array(
+						"JobID" => $args["jobid"],
 						"EquipmentName" => $args["equipmentname"],
 						"Building" => $args["building"],
 						"Floor" => $args["floor"],
