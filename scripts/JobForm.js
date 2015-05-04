@@ -5,11 +5,8 @@ function JobForm(form)
 	this.form = form;
 	this.jobID = null;
 	this.submitters = [];
+	this.jobcopy = {};
 	
-	this.on = function(event, handler)
-	{
-		this.handlers[event].push(handler);
-	}
 	this.trigger = function(args)
 	{
 		var ret = true;
@@ -20,23 +17,44 @@ function JobForm(form)
 		});
 		return ret;
 	}
+	this.pageshow = function()
+	{
+		$.each(form.find("[data-job-field]"), function(k, v)
+		{
+			var val = $(v);
+			$this.fields[val.data("job-field")] = val;
+		});
+		
+		if (!this.fields.NoEquipment)
+			this.equipButtons(this.fields.NoEquipment0, this.fields.NoEquipment1, this.fields.EquipDecrement, this.fields.EquipIncrement);
+		
+		$.each(this.jobcopy, function(k, v)
+		{
+			var f = $this[k];
+			if (f)
+				f(v);
+		});
+	};
 	this.dataEntry = function()
 	{
-		data =
+		var data =
 		{
-			EquipmentName: this.EquipmentName,
-			Building: this.Building,
-			Floor: this.Floor,
-			Room: this.Room,
-			DueDate: this.DueDate,
-			NoEquipment: this.NoEquipment,
-			AssetNo: this.AssetNo,
-			Specification: this.Specification
+			EquipmentName: this.EquipmentName(),
+			Building: this.Building(),
+			Floor: this.Floor(),
+			Room: this.Room(),
+			DueDate: this.DueDate(),
+			NoEquipment: this.NoEquipment(),
+			AssetNo: this.AssetNo(),
+			Specification: this.Specification(),
+			Progress: this.Progress()
 		};
 		if (!(this.jobID === null))
 		{
 			data.JobID = this.jobID;
 		}
+		
+		return data;
 	};
 	this.dataRequest = function(request)
 	{
@@ -48,6 +66,7 @@ function JobForm(form)
 		request["noequipment"] = this.NoEquipment();
 		request["assetno"] = this.AssetNo();
 		request["specification"] = this.Specification();
+		request["progress"] = this.Progress();
 		
 		if (!(this.jobID === null))
 		{
@@ -69,19 +88,13 @@ function JobForm(form)
 		this.NoEquipment(v.NoEquipment);
 		this.AssetNo(v.AssetNo);
 		this.Specification(v.Specification);
+		this.Progress(v.Progress);
+		
+		this.jobcopy = DataManager.job_copy(v);
 	};
 	this.init = function()
 	{
-		$.each(form.find("[data-job-field]"), function(k, v)
-		{
-			var val = $(v);
-			$this.fields[val.data("job-field")] = val;
-		});
-		
-		//alert(JSON.stringify(this.fields));
-		
-		if (!this.fields.NoEquipment)
-			this.equipButtons(this.fields.NoEquipment0, this.fields.NoEquipment1, this.fields.EquipDecrement, this.fields.EquipIncrement);
+		this.pageshow();
 		
 		this.form.submit(function()
 		{
@@ -91,7 +104,7 @@ function JobForm(form)
 	this.submit = function(val)
 	{
 		this.submitters.push(val);
-	}
+	};
 	this.equipVal = function()
 	{
 		var ne = this.fields.NoEquipment;
@@ -169,13 +182,55 @@ function JobForm(form)
 	{
 		return (function(value)
 		{
-			if (typeof value !== "undefined")
+			var field = $this.fields[name];
+			var scale;
+			
+			scale = field.data("job-scale");
+			
+			if (typeof scale !== "undefined")
 			{
-				$this.fields[name].val(value);
+				scale = Number(scale);
+				
+				// divide by zero
+				if (scale === 0)
+					scale = false;
 			}
 			else
 			{
-				return $this.fields[name].val();
+				scale = false;
+			}
+			
+			if (typeof value !== "undefined")
+			{
+				$this.jobcopy[name] = value;
+				
+				if (scale !== false)
+					value *= scale;
+				
+				field.val(value);
+				
+				var fdr = field.data("job-refresh");
+				if (typeof fdr !== "undefined")
+				{
+					try
+					{
+						field[fdr]("refresh");
+					}
+					catch(ex)
+					{
+					}
+				}
+			}
+			else
+			{
+				var val = field.val();
+				
+				if (scale !== false)
+				{
+					val /= scale;
+				}
+				
+				return val;
 			}
 		});
 	};
@@ -186,6 +241,7 @@ function JobForm(form)
 	this.DueDate = this.GetterSetter("DueDate");
 	this.AssetNo = this.GetterSetter("AssetNo");
 	this.Specification = this.GetterSetter("Specification");
+	this.Progress = this.GetterSetter("Progress");
 	
 	this.NoEquipment = function(value)
 	{

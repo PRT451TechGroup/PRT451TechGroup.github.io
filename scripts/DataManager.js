@@ -46,9 +46,10 @@ var DataManager = new (function()
 	this.update_job = function(queryData)
 	{
 		queryData.action = "update_job";
-		alert(JSON.stringify(queryData));
+		//console.log(queryData);
 		$.ajax("api.php", {data: queryData, dataType: "json"}).done(function(data)
 		{
+			
 			data.action = "update_job";
 			
 			if (!$this.session_failure(data))
@@ -63,20 +64,27 @@ var DataManager = new (function()
 	};
 	this.job_copy = function(v)
 	{
-		return(
+		var data =
 		{
 			EquipmentName: v.EquipmentName,
 			Building: v.Building,
 			Floor: v.Floor,
-			ROom: v.Room,
+			Room: v.Room,
 			DueDate: v.DueDate,
 			NoEquipment: v.NoEquipment,
 			AssetNo: v.AssetNo,
-			Specification: v.Specification
-		});
+			Specification: v.Specification,
+			Progress: v.Progress
+		};
+		
+		if (v.JobID)
+			data.JobID = v.JobID;
+		
+		return data;
 	};
 	this.show_jobs = function()
 	{
+		//console.log(new Error().stack);
 		$.ajax("api.php", {data: {"action": "show_jobs"}, dataType: "json"}).done(function(data)
 		{
 			data.action = "show_jobs";

@@ -1,7 +1,30 @@
+<?php
+//session_start();
+?>
+<!DOCTYPE html> 
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<title></title>
+	<link rel="stylesheet" href="jquery/jquery.mobile-1.4.5.css" />
+	<script src="jquery/jquery-1.11.2.min.js"></script>
+	<script src="jquery/jquery.mobile-1.4.5.min.js"></script>
+</head>
+<?php
+
+function addPage($id)
+{
+	echo "<div data-role=\"page\" id=\"$id\">";
+	include "pages/$id.php";
+	echo "</div>";
+}
+?>
+<body>
+<div data-role="page" id="pgEdit">
 <div data-role="header">
 	<h1>Editing</h1>
 </div>
-<div data-role="content">
+<div data-role="tabs">
 	<form id="frmEdit">
 		<ul data-role="listview">
 			<li data-role="fieldcontain">
@@ -13,19 +36,19 @@
 				<fieldset class="ui-grid-b">
 				<div class="ui-block-a">
 					<label for="_selBuilding">Building</label>
-					<select name="_selBuilding" id="_selBuilding" data-job-field="Building" data-job-refresh="selectmenu">
+					<select name="_selBuilding" id="_selBuilding" data-job-field="Building">
 						<option value="2">2</option>
 						<option value="12">12</option>
 					</select>
 				</div>
 				<div class="ui-block-b">
 					<label for="_selFloor">Floor</label>
-					<select name="_selFloor" id="_selFloor" data-select="range" data-select-min="1" data-select-max="3" data-job-field="Floor" data-job-refresh="selectmenu">
+					<select name="_selFloor" id="_selFloor" data-select="range" data-select-min="1" data-select-max="3" data-job-field="Floor">
 					</select>
 				</div>
 				<div class="ui-block-c">
 					<label for="_selRoom">Room</label>
-					<select name="_selRoom" id="_selRoom" data-select="range" data-select-min="1" data-select-max="25" data-job-field="Room" data-job-refresh="selectmenu">
+					<select name="_selRoom" id="_selRoom" data-select="range" data-select-min="1" data-select-max="20" data-job-field="Room">
 					</select>
 				</div>
 				</fieldset>
@@ -53,11 +76,11 @@
 			</li>
 			<li data-role="fieldcontain">
 				<label for="_txtProgress">Progress</label>
-				<input type="range" name="_txtProgress" id="_txtProgress" value="" min="0" max="100" data-job-scale="100" data-job-field="Progress" data-job-refresh="slider" />
+				<input type="range" name="_txtProgress" id="_txtProgress" value="0" min="0" max="100" data-job-scale="100" data-job-field="Progress" />
 			</li>
 			<li class="ui-grid-a">
 				<div class="ui-block-a">
-					<a id="btnEditCancel" class="ui-btn" href="#pgMain">Cancel</a>
+					<a id="btnEditCancel" class="ui-btn">Cancel</a>
 				</div>
 				<div class="ui-block-b">
 					<input type="submit" value="Save Changes" />
@@ -66,3 +89,6 @@
 		</ul>
 	</form>
 </div>
+</div>
+</body>
+</html>

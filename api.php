@@ -20,26 +20,26 @@ class DataManager
 	{
 		return new PDO('mysql:host=' . $this->host . ';dbname=' . $this->database, $this->user, $this->password);
 	}
-	public function new_job($equipmentname, $building, $floor, $room, $duedate, $noequipment, $assetno, $specification, &$out)
+	public function new_job($equipmentname, $building, $floor, $room, $duedate, $noequipment, $assetno, $specification, $progress, &$out)
 	{
 		$conn = $this->open_connection();
-		$stmt = $conn->prepare('INSERT INTO Jobs (EquipmentName, Building, Floor, Room, DueDate, NoEquipment, AssetNo, Specification) VALUES (?, ?, ?, ?, ?, ?, ?, ?)');
-		$rv = $stmt->execute(array($equipmentname, $building, $floor, $room, $duedate, $noequipment, $assetno, $specification));
+		$stmt = $conn->prepare('INSERT INTO Jobs (EquipmentName, Building, Floor, Room, DueDate, NoEquipment, AssetNo, Specification, Progress) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)');
+		$rv = $stmt->execute(array($equipmentname, $building, $floor, $room, $duedate, $noequipment, $assetno, $specification, $progress));
 		
 		$out = $rv ? $conn->lastInsertId() : $stmt->errorInfo();
 		
 		return $rv;
 	}
-	public function update_job($equipmentname, $building, $floor, $room, $duedate, $noequipment, $assetno, $specification, $jobid)
+	public function update_job($equipmentname, $building, $floor, $room, $duedate, $noequipment, $assetno, $specification, $progress, $jobid)
 	{
 		$conn = $this->open_connection();
-		$stmt = $conn->prepare('UPDATE Jobs SET EquipmentName=?, Building=?, Floor=?, Room=?, DueDate=?, NoEquipment=?, AssetNo=?, Specification=? WHERE JobID = ?');
-		return $stmt->execute(array($equipmentname, $building, $floor, $room, $duedate, $noequipment, $assetno, $specification, $jobid));
+		$stmt = $conn->prepare('UPDATE Jobs SET EquipmentName=?, Building=?, Floor=?, Room=?, DueDate=?, NoEquipment=?, AssetNo=?, Specification=?, Progress=? WHERE JobID = ?');
+		return $stmt->execute(array($equipmentname, $building, $floor, $room, $duedate, $noequipment, $assetno, $specification, $progress, $jobid));
 	}
 	public function get_jobs()
 	{
 		$conn = $this->open_connection();
-		return $conn->query('SELECT JobID, EquipmentName, Building, Floor, Room, DueDate, NoEquipment, AssetNo, Specification FROM Jobs ORDER BY JobID');
+		return $conn->query('SELECT JobID, EquipmentName, Building, Floor, Room, DueDate, NoEquipment, AssetNo, Specification, Progress FROM Jobs ORDER BY JobID');
 	}
 	public function password_verify($username, $password)
 	{
@@ -90,7 +90,7 @@ class Application
 		{
 			$out = 0;
 			$r = $dbm->new_job($args["equipmentname"], intval($args["building"]), intval($args["floor"]),
-				intval($args["room"]), $args["duedate"], intval($args["noequipment"]), $args["assetno"], $args["specification"], $out);
+				intval($args["room"]), $args["duedate"], intval($args["noequipment"]), $args["assetno"], $args["specification"], doubleval($args["progress"]), $out);
 			
 			if ($r)
 			{
@@ -104,7 +104,8 @@ class Application
 						"DueDate" => $args["duedate"],
 						"NoEquipment" => $args["noequipment"],
 						"AssetNo" => $args["assetno"],
-						"Specification" => $args["specification"]));
+						"Specification" => $args["specification"],
+						"Progress" => $args["progress"]));
 			}
 			else
 			{
@@ -116,7 +117,7 @@ class Application
 		{
 			$out = 0;
 			$r = $dbm->update_job($args["equipmentname"], intval($args["building"]), intval($args["floor"]),
-				intval($args["room"]), $args["duedate"], intval($args["noequipment"]), $args["assetno"], $args["specification"], $args["jobid"]);
+				intval($args["room"]), $args["duedate"], intval($args["noequipment"]), $args["assetno"], $args["specification"], doubleval($args["progress"]), $args["jobid"]);
 			
 			if ($r)
 			{
@@ -130,7 +131,8 @@ class Application
 						"DueDate" => $args["duedate"],
 						"NoEquipment" => $args["noequipment"],
 						"AssetNo" => $args["assetno"],
-						"Specification" => $args["specification"]));
+						"Specification" => $args["specification"],
+						"Progress" => $args["progress"]));
 			}
 			else
 			{
@@ -159,7 +161,8 @@ class Application
 						"DueDate" => $row["DueDate"],
 						"NoEquipment" => $row["NoEquipment"],
 						"AssetNo" => $row["AssetNo"],
-						"Specification" => $row["Specification"]);
+						"Specification" => $row["Specification"],
+						"Progress" => $row["Progress"]);
 				}
 				
 				return array("success" => true, "data" => $r ? $data : array());

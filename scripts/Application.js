@@ -45,17 +45,42 @@ var Application = new (function()
 		});
 		
 		this.jobView = new JobView(this.lstJobs, "pgEdit", new JobForm($("#frmEdit")));
+		this.jobView.pagescroll("pgMain");
+		this.jobView.styler(function(data, li)
+		{
+			var themes = "hgfedcb";
+			var lims = [1, 0.83, 0.67, 0.5, 0.33, 0.17, 0];
+			
+			for(var i=0;i<lims.length;i++)
+			{
+				if (data.Progress >= lims[i])
+				{
+					//console.log(themes[i]);
+					li.attr("data-theme", themes[i]);
+					break;
+				}
+			}
+		});
+		this.jobView.sorter(this.jobsort);
+		
 		this.createForm = new JobForm($("#frmCreate"));
 		this.tab = "review";
 		this.grabList = true;
 		this.editJob = 0;
+		
 	};
 	this.editButtons = function()
 	{
-		this.btnEditCancel.click(function()
+		/*this.btnEditCancel.click(function()
 		{
 			$(":mobile-pagecontainer").pagecontainer("change", "#pgMain");
-		})
+		})*/
+		
+		$(document).on('pageshow', '#pgEdit', function()
+		{
+			$this.jobView.pageshow();
+		});
+		$.mobile.loadPage("#pgEdit");
 	};
 	this.setupInterface = function()
 	{
@@ -72,6 +97,47 @@ var Application = new (function()
 		var li = $("<li />");
 		
 		return li;
+	};
+	this.cmp = function(a, b)
+	{
+		if (a > b)
+			return 1;
+		else if (a < b)
+			return -1;
+		else
+			return 0;
+	};
+	this.cmpn = function(a, b)
+	{
+		a = Number(a);
+		b = Number(b);
+		if (a > b)
+			return 1;
+		else if (a < b)
+			return -1;
+		else
+			return 0;
+	};
+	this.jobsort = function(a, b)
+	{
+		var z;
+		
+		if (z = $this.cmpn(a.Progress, b.Progress))
+			return z;
+		
+		if (z = $this.cmpn(a.Building, b.Building))
+			return z;
+		
+		if (z = $this.cmpn(a.Floor, b.Floor))
+			return z;
+			
+		if (z = $this.cmpn(a.Room, b.Room))
+			return z;
+		
+		if (z = $this.cmp(a.AssetNo, b.AssetNo))
+			return z;
+		
+		return $this.cmpn(a.JobID, b.JobID);
 	};
 	this.dataHooks = function()
 	{
@@ -90,6 +156,9 @@ var Application = new (function()
 		{
 			if (data.action != "show_jobs")
 				return;
+			
+			
+			$this.jobView.clear();
 			
 			$.each(data.data, function(k,v)
 			{
@@ -119,7 +188,10 @@ var Application = new (function()
 			if (data.action != "update_job")
 				return;
 			
-			alert(JSON.stringify(data));
+			$this.jobView.update(data.data);
+			$this.jobView.refresh();
+			$(":mobile-pagecontainer").pagecontainer("change", "#pgMain");
+			$this.switchTabReview();
 		})
 		DataManager.on("failure", function(data)
 		{
@@ -175,8 +247,6 @@ var Application = new (function()
 	{
 		this.pgMain.on("pageshow", function()
 		{
-			var ajax = DataManager.show_jobs();
-			
 			if ($this.grabList)
 			{
 				DataManager.show_jobs();
