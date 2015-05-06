@@ -35,6 +35,7 @@ function addPage($id)
 <body>
 	<?php
 		addPage("pgLogin");
+		addPage("pgRegister");
 		addPage("pgMenu");
 		addPage("pgMain");
 		addPage("pgEdit");

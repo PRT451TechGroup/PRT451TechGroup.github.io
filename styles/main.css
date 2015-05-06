@@ -26,3 +26,12 @@
 {
 	text-align: right;
 }
+#lstJobs .ui-block-a
+{
+	width: 75%;
+}
+#lstJobs .ui-block-b
+{
+	text-align: right;
+	max-width: 25%;
+}

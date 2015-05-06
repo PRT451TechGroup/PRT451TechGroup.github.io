@@ -112,6 +112,22 @@ var DataManager = new (function()
 			$this.trigger(data.success, data);
 		});
 	};
+	this.register = function(username, password)
+	{
+		$.ajax("api.php", {data: {"action": "register", "username": username, "password": password}, dataType: "json"}).done(function(data)
+		{
+			data.action = "register";
+			$this.trigger(data.success, data);
+		});
+	};
+	this.logout = function()
+	{
+		$.ajax("api.php", {data: {"action": "logout"}, dataType: "json"}).done(function(data)
+		{
+			data.action = "logout";
+			$this.trigger(data.success, data);
+		});
+	};
 	this.session_verify = function()
 	{
 		$.ajax("api.php", {data: {"action": "session_verify"}, dataType: "json"}).done(function(data)
@@ -129,5 +145,5 @@ var DataManager = new (function()
 			this.trigger("nosession", data);
 			
 		return x;
-	}
+	};
 })();

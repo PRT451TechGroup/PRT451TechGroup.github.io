@@ -57,10 +57,10 @@
 			</li>
 			<li class="ui-grid-a">
 				<div class="ui-block-a">
-					<a id="btnEditCancel" class="ui-btn" href="#pgMain">Cancel</a>
+					<a id="btnEditCancel" class="ui-btn ui-btn-icon-left ui-corner-all ui-icon-back" href="#pgMain">Cancel</a>
 				</div>
 				<div class="ui-block-b">
-					<input type="submit" value="Save Changes" />
+					<input type="submit" data-icon="edit" value="Save" />
 				</div>
 			</li>
 		</ul>

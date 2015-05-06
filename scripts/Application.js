@@ -37,7 +37,11 @@ var Application = new (function()
 			"_dtTime",
 			"_txtAssetNo",
 			"_txtSpecification",
-			"btnEditCancel"
+			"btnEditCancel",
+			"btnLogout",
+			"btnRegister",
+			"pgLogin",
+			"frmRegister"
 		];
 		$.each(props, function(k, v)
 		{
@@ -91,6 +95,9 @@ var Application = new (function()
 		this.loginButtons();
 		this.dataHooks();
 		this.editButtons();
+		this.registerButtons();
+		
+		DataManager.session_verify();
 	};
 	this.jobListItem = function(v)
 	{
@@ -154,9 +161,16 @@ var Application = new (function()
 		});
 		DataManager.on("success", function(data)
 		{
-			if (data.action != "show_jobs")
+			if (data.action != "session_verify")
 				return;
 			
+			if ($.mobile.activePage.attr("id") === "pgLogin")
+				$(":mobile-pagecontainer").pagecontainer("change", "#pgMenu");
+		});
+		DataManager.on("success", function(data)
+		{
+			if (data.action != "show_jobs")
+				return;
 			
 			$this.jobView.clear();
 			
@@ -172,7 +186,7 @@ var Application = new (function()
 			if (data.action != "login")
 				return;
 			
-			$(":mobile-pagecontainer").pagecontainer("change", "#pgMain");
+			$(":mobile-pagecontainer").pagecontainer("change", "#pgMenu");
 		});
 		DataManager.on("success", function(data)
 		{
@@ -193,9 +207,24 @@ var Application = new (function()
 			$(":mobile-pagecontainer").pagecontainer("change", "#pgMain");
 			$this.switchTabReview();
 		})
+		DataManager.on("success", function(data)
+		{
+			if (data.action != "logout")
+				return;
+			
+			$(":mobile-pagecontainer").pagecontainer("change", "#pgLogin");
+		});
+		DataManager.on("success", function(data)
+		{
+			if (data.action != "register")
+				return;
+			
+			console.log("todo: register success");
+			$(":mobile-pagecontainer").pagecontainer("change", "#pgLogin");
+		});
 		DataManager.on("failure", function(data)
 		{
-			alert(JSON.stringify(data));
+			console.log(data);
 		});
 	};
 	
@@ -266,12 +295,48 @@ var Application = new (function()
 		{
 			DataManager.session_verify();
 		});
+		this.btnLogout.click(function()
+		{
+			DataManager.logout();
+		});
 	};
 	this.loginButtons = function()
 	{
 		this.frmLogin.submit(function()
 		{
 			DataManager.login($this.txtUsername.val(), $this.txtPassword.val());
+			return false;
+		});
+		this.pgLogin.on("pageshow", function()
+		{
+			DataManager.session_verify();
+		});
+	};
+	this.registerButtons = function()
+	{
+		this.frmRegister.submit(function()
+		{
+			var user, pw, pwv;
+			user = $this.frmRegister.find("[data-field=username]").val().trim();
+			pw = $this.frmRegister.find("[data-field=password]").val().trim();
+			pwv = $this.frmRegister.find("[data-field=confirmpassword]").val().trim();
+			
+			if (!user.length)
+			{
+				console.log("todo: enter username");
+			}
+			else if (pw !== pwv)
+			{
+				console.log("todo: password mismatch");
+			}
+			else if (!pw.length)
+			{
+				console.log("todo: enter password");
+			}
+			else
+			{
+				DataManager.register(user, pw);
+			}
 			return false;
 		});
 	};

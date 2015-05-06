@@ -17,7 +17,10 @@ var JobView = function(lvw, tgp, frm)
 			li = li.parent();
 			jobid = li.data("jobid");
 		}
-		while(typeof jobid === "undefined");
+		while(typeof jobid === "undefined" && li !== $this.model);
+		
+		if (typeof jobid === "undefined")
+			return;
 		
 		$this.jobForm.dataSet(DataManager.getJobById(jobid));
 		$this.jobForm.jobID = jobid;
@@ -167,8 +170,7 @@ var JobView = function(lvw, tgp, frm)
 		a.attr("href", "#" + this.targetPage);
 		//a.text(v.EquipmentName);
 		//a.append($("<span />").attr("class", "ui-li-count").text(v.Building + "." + v.Floor + "." + v.Room));
-		a.append(Extensions.createGrid([v.EquipmentName, v.Building + "." + v.Floor + "." + v.Room,
-			Math.floor(v.Progress * 100)]));
+		a.append(Extensions.createGrid([v.EquipmentName, v.Building + "." + v.Floor + "." + v.Room]));
 		
 		var li = $("<li />");
 		li.append(a);

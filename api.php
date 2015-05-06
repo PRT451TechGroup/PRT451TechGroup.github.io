@@ -30,6 +30,14 @@ class DataManager
 		
 		return $rv;
 	}
+	public function register($username, $password)
+	{
+		$conn = $this->open_connection();
+		$stmt = $conn->prepare('INSERT INTO Logins (Username, Password) VALUES (?, ?)');
+		$rv = $stmt->execute(array($username, $password));
+		
+		return $rv;
+	}
 	public function update_job($equipmentname, $building, $floor, $room, $duedate, $noequipment, $assetno, $specification, $progress, $jobid)
 	{
 		$conn = $this->open_connection();
@@ -72,7 +80,9 @@ class DataManager
 				foreach($res as $row)
 				{
 					if ($row['Username'] == $_SESSION["username"])
+					{
 						return true;
+					}
 				}
 			}
 		}
@@ -180,6 +190,24 @@ class Application
 			}
 			return $response;
 		};
+		$this->pfunctions['register'] = function($args, $dbm)
+		{
+			$rv = $dbm->register($args['username'], $args['password']);
+			
+			return array("success" => $rv);
+		};
+		$this->pfunctions['logout'] = function($args, $dbm)
+		{
+			session_start();
+			$success = false;
+			if (isset($_SESSION["username"]))
+			{
+				unset($_SESSION["username"]);
+				$success = true;
+			}
+			
+			return array("success" => $success);
+		};
 		$this->pfunctions['session_verify'] = function($args, $dbm)
 		{
 			return array("success" => $dbm->session_verify());
@@ -201,7 +229,7 @@ class Application
 		{
 			$func = $this->pfunctions[$action];
 		}
-		if (isset($this->functions[$action]))
+		else if (isset($this->functions[$action]))
 		{
 			if ($dbm->session_verify())
 				$func = $this->functions[$action];
@@ -209,6 +237,10 @@ class Application
 			{
 				return array("success" => false, "error" => "nosession");
 			}
+		}
+		else
+		{
+			return array("success" => false, "error" => "invalidaction");
 		}
 		
 		return $func($args, $dbm);
