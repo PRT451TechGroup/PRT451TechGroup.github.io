@@ -1,5 +1,7 @@
 <div data-role="header">
+		
 		<h1>CDU Tech Support</h1>
+		<button data-icon="power" data-click="logout" data-position="right" class="ui-btn-right">Logout</button>
 </div>
 <div data-role="tabs">
 	<div data-role="navbar">

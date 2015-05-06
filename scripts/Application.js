@@ -38,7 +38,6 @@ var Application = new (function()
 			"_txtAssetNo",
 			"_txtSpecification",
 			"btnEditCancel",
-			"btnLogout",
 			"btnRegister",
 			"pgLogin",
 			"frmRegister"
@@ -248,6 +247,10 @@ var Application = new (function()
 		{
 			$this.tab = "review";
 		});
+		$("[data-click=logout]").click(function()
+		{
+			DataManager.logout();
+		});
 	};
 	this.switchTabCreate = function()
 	{
@@ -294,10 +297,6 @@ var Application = new (function()
 		this.pgMenu.on("pageshow", function()
 		{
 			DataManager.session_verify();
-		});
-		this.btnLogout.click(function()
-		{
-			DataManager.logout();
 		});
 	};
 	this.loginButtons = function()
