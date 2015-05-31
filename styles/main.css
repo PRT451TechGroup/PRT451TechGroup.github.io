@@ -1,3 +1,11 @@
+img{
+	width:200px;
+	height:100px;
+	display:block;
+	margin-left:auto;
+	margin-right:auto;
+}
+
 #fsEquipment .ui-block-a, #fsEquipment .ui-block-d
 {
 	max-width: 4em;
@@ -35,3 +43,27 @@
 	text-align: right;
 	max-width: 25%;
 }
+@media only screen 
+    and (min-device-width : 375px) 
+    and (max-device-width : 667px) 
+{ 
+img{
+	width:200px;
+	height:100px;
+	display:block;
+	margin-left:auto;
+	margin-right:auto;
+}}
+
+@media only screen 
+    and (min-device-width : 414px) 
+    and (max-device-width : 736px) 
+{ 
+img{
+	width:2500px;
+	height:100px;
+	display:block;
+	margin-left:auto;
+	margin-right:auto;
+}}
+
